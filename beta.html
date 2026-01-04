@@ -101,20 +101,59 @@
             const data = await resp.json();
             const products = isSingle ? [data.product] : data.products;
 
-            // Si la API no devuelve nada, aplicamos .notfound (Gris)
-            if (!products || products.length === 0 || data.status === 0 || !products[0]) {
-                resultsDiv.innerHTML = "";
+            // Si el producto no existe en la base de datos
+            if (!products || products.length === 0 || data.status === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="product-item notfound">
+                        <div>
+                            <strong>Desconocido</strong><br>
+                            <small>Código no encontrado en Open Food Facts.</small>
+                        </div>
+                    </div>`;
+                return;
+            }
+
+            resultsDiv.innerHTML = "";
+            products.forEach(p => {
+                if(!p) return;
+                
+                const additives = p.additives_tags || [];
+                const found = additives.filter(a => a.includes('e120') || a.includes('e904'));
+                const isDanger = found.length > 0;
+                
+                // Obtenemos el nombre. Si no existe en la API, usamos "Desconocido"
+                const productName = p.product_name || 'Desconocido';
+
+                // LÓGICA DE CLASES
+                let statusClass;
+                
+                // Si el nombre es "Desconocido", clase .notfound (GRIS)
+                // Si no, evaluamos si es .danger (ROJO) o .safe (VERDE)
+                if (productName === "Desconocido") {
+                    statusClass = 'notfound';
+                } else {
+                    statusClass = isDanger ? 'danger' : 'safe';
+                }
+
                 const div = document.createElement('div');
-                div.className = 'product-item notfound'; 
+                div.className = `product-item ${statusClass}`;
                 div.innerHTML = `
+                    <img src="${p.image_small_url || ''}" onerror="this.style.display='none'">
                     <div>
-                        <strong>Desconocido</strong><br>
-                        <small>El código de barras no existe.</small>
+                        <strong>${productName}</strong><br>
+                        <small>${
+                            statusClass === 'notfound' 
+                            ? 'Producto sin información suficiente' 
+                            : (isDanger ? ':( CONTIENE: ' + found.join(', ').toUpperCase().replace(/EN:/g,'') : ':D Libre de E-120 o E-904!')
+                        }</small>
                     </div>
                 `;
                 resultsDiv.appendChild(div);
-                return;
-            }
+            });
+        } catch (e) {
+            resultsDiv.innerHTML = "Error de conexión.";
+        }
+    }
 
             resultsDiv.innerHTML = "";
             products.forEach(p => {
