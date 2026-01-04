@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>escaner de bichos</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
         body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; background: #f0f2f5; }
@@ -28,14 +29,14 @@
 <body>
 
 <div class="card">
-    <h2>Detector de Aditivos</h2>
+    <h2>escaner de bichos.</h2>
     
     <div id="scanner-container"></div>
 
     <div class="controls">
-        <button class="btn btn-green" onclick="toggleCamera()">📷 Abrir Cámara para Escanear</button>
+        <button class="btn btn-green" onclick="toggleCamera()">Abrir cámara para escanear</button>
         <input type="text" id="searchInput" placeholder="Escribe nombre o código de barras...">
-        <button class="btn btn-blue" onclick="searchProduct()">Buscar por Texto</button>
+        <button class="btn btn-blue" onclick="searchProduct()">Buscar por texto</button>
     </div>
 
     <div id="results"></div>
@@ -60,7 +61,7 @@
             inputStream: { name: "Live", type: "LiveStream", target: document.querySelector('#scanner-container'), constraints: { facingMode: "environment" } },
             decoder: { readers: ["ean_reader", "ean_8_reader", "code_128_reader"] }
         }, (err) => {
-            if (err) { alert("Error cámara: " + err); return; }
+            if (err) { alert(":( Error cámara: " + err); return; }
             Quagga.start();
         });
 
@@ -100,7 +101,7 @@
             const products = isSingle ? [data.product] : data.products;
 
             if (!products || products.length === 0 || data.status === 0) {
-                resultsDiv.innerHTML = "No encontrado.";
+                resultsDiv.innerHTML = ":( No encontrado.";
                 return;
             }
 
@@ -117,13 +118,13 @@
                     <img src="${p.image_small_url || ''}" onerror="this.style.display='none'">
                     <div>
                         <strong>${p.product_name || 'Desconocido'}</strong><br>
-                        <small>${isDanger ? '⚠️ CONTIENE: ' + found.join(', ').toUpperCase().replace(/EN:/g,'') : '✅ LIBRE de E-120/E-904'}</small>
+                        <small>${isDanger ? ':( CONTIENE: ' + found.join(', ').toUpperCase().replace(/EN:/g,'') : ':D Libre de E-120 o E-904!'}</small>
                     </div>
                 `;
                 resultsDiv.appendChild(div);
             });
         } catch (e) {
-            resultsDiv.innerHTML = "Error de conexión.";
+            resultsDiv.innerHTML = "Error de conexión. Revisa tu conexión a Internet.";
         }
     }
 </script>
