@@ -15,7 +15,7 @@
         #scanner-container video { width: 100%; height: 100%; object-fit: cover; }
         
         .controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        input { padding: 12px; border: 1px solid #333; border-radius: 6px; font-size: 16px; }
+        input { padding: 12px; border: 1px solid #aaa; border-radius: 6px; font-size: 16px; background: #333 }
         .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; }
         .btn-blue { background: #3d49fc; color: white; }
         .btn-green { background: #3dfc8d; color: white; }
@@ -35,7 +35,7 @@
 
     <div class="controls">
         <button class="btn btn-green" onclick="toggleCamera()">Abrir cámara para escanear</button>
-        <input type="text" id="searchInput" style="background: #333; placeholder="Escribe nombre o código de barras...">
+        <input type="text" id="searchInput" placeholder="Escribe nombre o código de barras...">
         <button class="btn btn-blue" onclick="searchProduct()">Buscar por texto</button>
     </div>
 
